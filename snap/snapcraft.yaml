@@ -1,0 +1,61 @@
+name: freeradius-server
+base: core20 
+version: '3.0.21'
+summary: Open Source RADIUS Server
+description: |
+  The FreeRADIUS Server Project is a high performance and highly configurable multi-protocol policy server, supporting RADIUS, DHCPv4 and VMPS.
+  Using RADIUS allows authentication and authorization for a network to be centralized, and minimizes the number of changes that have to be done 
+  when adding or deleting new users to a network.
+
+  For more information, please visit https://freeradius.org/
+
+grade: stable
+confinement: strict
+
+apps:
+  freeradius-server:
+    command: usr/local/sbin/radiusd -X
+    daemon: simple
+    restart-condition: always
+    environment:
+      LD_LIBRARY_PATH: ${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$SNAP/usr/local/lib
+    plugs:
+    - network
+
+
+layout:
+  /usr/local/etc/raddb:
+    bind: $SNAP/usr/local/etc/raddb
+  /usr/local/share/freeradius:
+    bind: $SNAP/usr/local/share/freeradius
+
+
+parts:
+  freeradius-server-source:
+    plugin: make
+    source-type: git
+    source: https://github.com/FreeRADIUS/freeradius-server
+    source-tag: release_3_0_21
+    build-packages:
+      - devscripts 
+      - quilt 
+      - debhelper 
+      - fakeroot 
+      - equivs
+      - libssl-dev
+      - libtalloc-dev
+      - libkqueue-dev
+    stage-packages:
+      - libtalloc2
+
+    # Freeradius-server can not be built with parallel builds
+    # make plugin by default enables parallel builds
+    # there, overriding and manual handling was required. 
+    override-build: |
+      ./configure
+      make
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+      cp -r /usr/local/etc/ $SNAPCRAFT_PART_INSTALL/usr/local/etc/
+      cp -r /usr/local/share/ $SNAPCRAFT_PART_INSTALL/usr/local/share/
+      chmod -R 755 $SNAPCRAFT_PART_INSTALL/usr/local/etc/
+      chmod -R 755 $SNAPCRAFT_PART_INSTALL/usr/local/share/

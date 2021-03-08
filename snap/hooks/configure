@@ -1,0 +1,16 @@
+#!/bin/sh
+CLIENTS_CONFIG="${SNAP}/usr/local/etc/raddb/clients.conf"
+USERS_CONFIG="${SNAP}/usr/local/etc/raddb/users"
+
+users=`cat $USERS_CONFIG`
+clients=`cat $CLIENTS_CONFIG` 
+
+# set default values if they have not been set by the install hook yet
+[ -n "$(snapctl get users)" ] || snapctl set users="$echo $users"
+[ -n "$(snapctl get clients)" ] || snapctl set clients="$echo $clients"
+
+echo "$(snapctl get users)" > CLIENTS_CONFIG
+echo "$(snapctl get clients)" > USERS_CONFIG
+
+# Restart the service
+snapctl restart ${SNAP_NAME}.${SNAP_NAME}
