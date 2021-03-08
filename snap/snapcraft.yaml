@@ -25,9 +25,9 @@ apps:
 
 layout:
   /usr/local/etc/raddb:
-    bind: $SNAP/usr/local/etc/raddb
+    bind: $SNAP_DATA/usr/local/etc/raddb
   /usr/local/share/freeradius:
-    bind: $SNAP/usr/local/share/freeradius
+    bind: $SNAP_DATA/usr/local/share/freeradius
 
 
 parts:

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mkdir -p ${SNAP_DATA}/usr/local/etc/
+cp -r ${SNAP}/usr/local/etc/ ${SNAP_DATA}/usr/local/
+
+mkdir -p ${SNAP_DATA}/usr/local/share/
+cp -r ${SNAP}/usr/local/share/ ${SNAP_DATA}/usr/local/

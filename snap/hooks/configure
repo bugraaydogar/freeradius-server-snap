@@ -1,6 +1,6 @@
 #!/bin/sh
-CLIENTS_CONFIG="${SNAP}/usr/local/etc/raddb/clients.conf"
-USERS_CONFIG="${SNAP}/usr/local/etc/raddb/users"
+CLIENTS_CONFIG="${SNAP_DATA}/usr/local/etc/raddb/clients.conf"
+USERS_CONFIG="${SNAP_DATA}/usr/local/etc/raddb/users"
 
 users=`cat $USERS_CONFIG`
 clients=`cat $CLIENTS_CONFIG` 
@@ -9,8 +9,8 @@ clients=`cat $CLIENTS_CONFIG`
 [ -n "$(snapctl get users)" ] || snapctl set users="$echo $users"
 [ -n "$(snapctl get clients)" ] || snapctl set clients="$echo $clients"
 
-echo "$(snapctl get users)" > CLIENTS_CONFIG
-echo "$(snapctl get clients)" > USERS_CONFIG
+echo "$(snapctl get users)" > $USERS_CONFIG
+echo "$(snapctl get clients)" > $CLIENTS_CONFIG
 
 # Restart the service
 snapctl restart ${SNAP_NAME}.${SNAP_NAME}
